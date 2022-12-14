@@ -4,7 +4,6 @@ import os
 import json
 import math
 
-
 # User Class - Used to interact with the spotify API
 class User:
     def __init__(self):
