@@ -29,7 +29,7 @@ class User:
             # Authentication details stored as environment vars for security
             client_id= self.cid,\
             client_secret= self.secret ,\
-            redirect_uri= self.URI))
+            redirect_uri= self.URI,))
         self.id = self.sp.me()['id']
         write_to_json(self.sp.me())
 
