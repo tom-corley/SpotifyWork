@@ -1,7 +1,6 @@
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 import os
-import json
 import math
 
 # User Class - Used to interact with the spotify API
@@ -31,7 +30,6 @@ class User:
             client_secret= self.secret ,\
             redirect_uri= self.URI,))
         self.id = self.sp.me()['id']
-        write_to_json(self.sp.me())
 
     # Gets artist id for a given artist passed as a string, useful for other functions
     def get_artist_id(self, search_input):
@@ -113,10 +111,13 @@ class User:
 
     # Prints track which is currently playing
     def currently_playing(self):
-        results = self.sp.current_user_playing_track()
-        name = results["item"]["name"]
-        artist = results["item"]["artists"][0]["name"]
-        print("Currently Playing: "+name+" - "+artist)
+        try: 
+            results = self.sp.current_user_playing_track()
+            name = results["item"]["name"]
+            artist = results["item"]["artists"][0]["name"]
+            print("Currently Playing: "+name+" - "+artist)
+        except Exception:
+            print("No track currently playing")
     
 def write_to_json(input):
     json_input = json.dumps(input,indent=4)
