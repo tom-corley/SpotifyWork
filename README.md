@@ -1,4 +1,4 @@
-# Title TBC
+# Spotifun
 
 A Python application to beform basic operations on a users spotify account programmatically, automating playlist creation, as well as implementing spotifys reccomendation algorithm, to allow users to discover new music.
 
