@@ -64,6 +64,8 @@ class User:
 
         # The API can only add 100 tracks at a time
         # If there are > 100 to be added, done in several steps
+        if len(tracks) == None:
+            return
         if len(tracks) < 100:
             self.sp.user_playlist_add_tracks(
             user=self.id,
