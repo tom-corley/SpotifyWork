@@ -1,5 +1,6 @@
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
+import json
 import os
 import math
 
@@ -118,14 +119,29 @@ class User:
             print("Currently Playing: "+name+" - "+artist)
         except Exception:
             print("No track currently playing")
+
+    # Makes playlist of short-term top 50 songs
+    def short_50(self):
+        results = self.sp.current_user_top_tracks(time_range='short_term', limit=50)
+        top_50 = [i["id"] for i in results["items"]]
+        self.create_playlist(tracks = top_50, name = "Short term top 50")
     
+    # Prints top 50 artists to terminal
+    def top_artists(self):
+        results = self.sp.current_user_top_artists(time_range='long-term', limit=50)
+        top_50 = [i["name"] for i in results["items"]]
+        for i, artist in enumerate(top_50):
+            print(f"{i}. {artist}")
+
+
 def write_to_json(input):
     json_input = json.dumps(input,indent=4)
     with open("test.json","w+") as f:
         f.write(json_input)
 def main():
     me = User()
-    me.currently_playing()    
+    #me.currently_playing()
+    me.top_artists()    
 
 if __name__ == "__main__":
     main()
