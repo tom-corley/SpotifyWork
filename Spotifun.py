@@ -142,9 +142,10 @@ def write_to_json(input):
         f.write(json_input)
 def main():
     me = User()
-    #me.currently_playing()
-    me.top_artists()
-    #me.short_50()  
+    me.currently_playing()
+    #me.playlist_top50_alltime()
+    #me.top_artists()
+    me.short_50()  
 
 if __name__ == "__main__":
     main()
