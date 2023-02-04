@@ -29,4 +29,19 @@ A Python application to beform basic operations on a users spotify account progr
 
 - `top_artists`: prints each of the users top 50 artists to the terminal.
 
+## Planned Features
+
+- Generate pdf with user stats
+
+- Play a random song you might like
+
+- Liked song genres into playlists
+
+- random image generation with playlist assignment
+
+- put on web, aws lamda?
+
+- figure out multiple user authentication
+
+
 

@@ -130,10 +130,10 @@ class User:
     
     # Prints top 50 artists to terminal
     def top_artists(self):
-        results = self.sp.current_user_top_artists(time_range='long-term', limit=50)
+        results = self.sp.current_user_top_artists(time_range='long_term', limit=50)
         top_50 = [i["name"] for i in results["items"]]
         for i, artist in enumerate(top_50):
-            print(f"{i}. {artist}")
+            print(f"{i+1}. {artist}")
 
 
 def write_to_json(input):
@@ -143,7 +143,8 @@ def write_to_json(input):
 def main():
     me = User()
     #me.currently_playing()
-    me.top_artists()    
+    me.top_artists()
+    #me.short_50()  
 
 if __name__ == "__main__":
     main()
