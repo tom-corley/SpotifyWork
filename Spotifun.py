@@ -3,6 +3,10 @@ from spotipy.oauth2 import SpotifyOAuth
 import json
 import os
 import math
+import base64
+from PIL import Image, ImageDraw, ImageOps
+import io
+import random
 
 # User Class - Used to interact with the spotify API
 class User:
@@ -31,6 +35,49 @@ class User:
             client_secret= self.secret ,\
             redirect_uri= self.URI,))
         self.id = self.sp.me()['id']
+
+    def random_image(self):
+        # Create an image with random size and color
+        width, height = (100, 100)
+        image = Image.new('RGB', (width, height))
+        pixels = image.load()
+
+        # Assign a random color to each pixel
+        for i in range(width):
+            for j in range(height):
+                pixels[i, j] = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+
+        # Generate a random border color
+        border_color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+
+        # Add a border to the image
+        image = ImageOps.expand(image, border=5, fill=border_color)
+
+        # Create the smiley face
+        draw = ImageDraw.Draw(image)
+        center_x = width // 2
+        center_y = height // 2
+
+        # Draw two black dots for the eyes
+        draw.ellipse((center_x - 20, center_y - 20, center_x - 10, center_y - 10), fill=(0, 0, 0))
+        draw.ellipse((center_x + 10, center_y - 20, center_x + 20, center_y - 10), fill=(0, 0, 0))
+
+        # Draw the smile
+        draw.arc((center_x - 20, center_y - 5, center_x + 20, center_y + 20), 0, 180, fill=(0, 0, 0))
+
+
+
+
+        # Convert the image to a byte array
+        with io.BytesIO() as buffer:
+            image.save(buffer, format="JPEG")
+            byte_array = buffer.getvalue()
+
+        # Encode the byte array in base64
+        base64_encoded = base64.b64encode(byte_array).decode('utf-8')
+
+        # Output the base64 string
+        return base64_encoded
 
     # Gets artist id for a given artist passed as a string, useful for other functions
     def get_artist_id(self, search_input):
@@ -61,6 +108,7 @@ class User:
         # Creates an empty playlist, saves playlist id for later
         new_playlist_id = \
             self.sp.user_playlist_create(self.id, name)['id']
+        self.sp.playlist_upload_cover_image(new_playlist_id, self.random_image())
 
         # The API can only add 100 tracks at a time
         # If there are > 100 to be added, done in several steps
@@ -126,26 +174,28 @@ class User:
     def short_50(self):
         results = self.sp.current_user_top_tracks(time_range='short_term', limit=50)
         top_50 = [i["id"] for i in results["items"]]
-        self.create_playlist(tracks = top_50, name = "Short term top 50")
+        self.create_playlist(tracks = top_50, name = "Recent Top 50 (coded)")
     
     # Prints top 50 artists to terminal
     def top_artists(self):
-        results = self.sp.current_user_top_artists(time_range='long_term', limit=50)
+        results = self.sp.current_user_top_artists(time_range='long_term', limit=25)
         top_50 = [i["name"] for i in results["items"]]
         for i, artist in enumerate(top_50):
             print(f"{i+1}. {artist}")
-
-
+            
 def write_to_json(input):
-    json_input = json.dumps(input,indent=4)
-    with open("test.json","w+") as f:
-        f.write(json_input)
+        json_input = json.dumps(input,indent=4)
+        with open("test.json","w+") as f:
+            f.write(json_input)
+
 def main():
-    me = User()
-    me.currently_playing()
-    #me.playlist_top50_alltime()
-    #me.top_artists()
-    me.short_50()  
+        me = User()
+        me.currently_playing()
+        #me.playlist_top50_alltime()
+        #me.top_artists()
+        me.artist_playlist_for_top50_artists()
+        #for i in range(8):
+            #me.delete_newest_playlist()
 
 if __name__ == "__main__":
     main()
